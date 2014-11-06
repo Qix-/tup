@@ -592,6 +592,8 @@ static int parse_tupfile(struct tupfile *tf, struct buf *b, const char *filename
 			rc = run_script(tf, line+4, lno, &bl);
 		} else if(strncmp(line, "export ", 7) == 0) {
 			rc = export(tf, line+7);
+		} else if(strncmp(line, "import ", 7) == 0) {
+			rc = import(tf, line+7);
 		} else if(strcmp(line, ".gitignore") == 0) {
 			tf->ign = 1;
 		} else if(line[0] == ':') {
@@ -988,6 +990,57 @@ int export(struct tupfile *tf, const char *cmdline)
 	}
 	if(tupid_tree_add_dup(&tf->env_root, tent->tnode.tupid) < 0)
 		return -1;
+	return 0;
+}
+
+int import(struct tupfile *tf, const char *cmdline)
+{
+	const char* env_val;
+	char* env_name = 0;
+	size_t env_len = 0;
+	int rc;
+
+	if(!cmdline[0]) {
+		fprintf(tf->f, "tup error: Expected external environment variable to import.\n");
+		return SYNTAX_ERROR;
+	}
+
+	/* Trim the variable name */
+	cmdline = strpbrk(cmdline, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_");
+	env_len = strspn(cmdline, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_");
+
+	/* Any other characters after that? */
+	if(strlen(&cmdline[env_len]) > 0) {
+		fprintf(tf->f, "tup error: Invalid environment variable '%s'\n", cmdline);
+		return SYNTAX_ERROR;
+	}
+
+	/* Copy into its final destination */
+	env_name = malloc(env_len + 1);
+	strncpy(env_name, cmdline, env_len);
+	env_name[env_len] = 0;
+
+	/* Check first letter */
+	if(env_name[0] >= 48 && env_name[0] <= 57) {
+		fprintf(tf->f, "tup error: Environment variable '%s' cannot start with a number\n", env_name);
+		free(env_name);
+		return SYNTAX_ERROR;
+	}
+
+	/* Get the environment value */
+	env_val = getenv(env_name);
+	if(env_val == NULL) {
+		env_val = "";
+	}
+
+	/* Set the database value */
+	rc = vardb_set(&tf->vdb, env_name, env_val, NULL);
+	free(env_name);
+	if(rc < 0) {
+		fprintf(tf->f, "tup internal error: Error setting variable '%s'\n", cmdline);
+		return -1;
+	}
+
 	return 0;
 }
 
