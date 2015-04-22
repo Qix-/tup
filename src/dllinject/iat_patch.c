@@ -3,7 +3,7 @@
  * tup - A file-based build system
  *
  * Copyright (C) 2010  James McKaskill
- * Copyright (C) 2010-2014  Mike Shal <marfey@gmail.com>
+ * Copyright (C) 2010-2015  Mike Shal <marfey@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -32,7 +32,7 @@ static void do_hook(void* fphook, void** fporig, IMAGE_THUNK_DATA* cur)
 		return;
 	}
 
-	cur->u1.Function = (DWORD)fphook;
+	cur->u1.Function = (DWORD_PTR)fphook;
 
 	if(!VirtualProtect(cur, sizeof(IMAGE_THUNK_DATA), old_protect, &old_protect)) {
 		return;

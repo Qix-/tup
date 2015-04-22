@@ -2,7 +2,7 @@
  *
  * tup - A file-based build system
  *
- * Copyright (C) 2010-2014  Mike Shal <marfey@gmail.com>
+ * Copyright (C) 2010-2015  Mike Shal <marfey@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include "dir_mutex.h"
 
-int readlinkat(int dirfd, const char *pathname, char *buf, size_t bufsiz)
+ssize_t readlinkat(int dirfd, const char *pathname, char *buf, size_t bufsiz)
 {
 	int rc;
 

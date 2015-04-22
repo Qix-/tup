@@ -2,7 +2,7 @@
  *
  * tup - A file-based build system
  *
- * Copyright (C) 2011-2014  Mike Shal <marfey@gmail.com>
+ * Copyright (C) 2011-2015  Mike Shal <marfey@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -25,6 +25,7 @@
 static const char *default_env[] = {
 /* NOTE: Please increment PARSER_VERSION if these are modified */
 	"PATH",
+	"HOME",
 #ifdef _WIN32
 	/* Basic Windows variables */
 	"SYSTEMROOT",

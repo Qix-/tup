@@ -3,7 +3,7 @@
  * tup - A file-based build system
  *
  * Copyright (C) 2010  James McKaskill
- * Copyright (C) 2010-2014  Mike Shal <marfey@gmail.com>
+ * Copyright (C) 2010-2015  Mike Shal <marfey@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -43,7 +43,7 @@ void debug_hook(const char* format, ...)
 	va_list ap;
 	if(debugf == NULL && !opening) {
 		opening = 1;
-		debugf = fopen("c:\\cygwin\\home\\marf\\ok.txt", "a");
+		debugf = fopen("ok.txt", "a");
 		fflush(stdout);
 	}
 	if(debugf == NULL) {

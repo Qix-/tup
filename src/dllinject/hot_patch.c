@@ -2,7 +2,7 @@
  *
  * tup - A file-based build system
  *
- * Copyright (C) 2012-2014  Mike Shal <marfey@gmail.com>
+ * Copyright (C) 2012-2015  Mike Shal <marfey@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -48,7 +48,7 @@ static int hot_patch_int(void *old_proc, void *new_proc, void **orig_proc)
 	}
 
 	*(begin + 0) = 0xe9; // long jump
-	*(DWORD*)(begin + 1) = (DWORD)new_proc - (DWORD)old_proc;
+	*(DWORD*)(begin + 1) = (DWORD_PTR)new_proc - (DWORD_PTR)old_proc;
 	*(WORD*)(begin + 5) = 0xf9eb; // short jump back
 
 	if(orig_proc)
